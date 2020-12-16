@@ -78,7 +78,7 @@ function paramfy(url) {
 			return el;
 		}
     });
-    log(msg('OTHERS -----> ') + requestParams);
+    log(msg('OTHERS ---------> ') + others);
 
 	return {
 		newUrl,

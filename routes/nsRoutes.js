@@ -1,9 +1,19 @@
 const express = require('express');
 const { buildOAuth } = require('../utils/oAuth');
-const axios = require('axios');
-const router = express.Router();
+const getData = require('../utils/apiFeatures');
 
-router.get('/restletapi', (req, res, next) => {
+const router = express.Router();
+// --------------------------------- \\
+
+const chalk = require('chalk'),
+	log = console.log,
+	msg = chalk.bold.blue,
+	scs = chalk.bold.green,
+	err = chalk.bold.red,
+	wrn = chalk.bold.yellow;
+// --------------------------------- \\
+
+router.get('/restletapi', async (req, res, next) => {
     try {
         const deploy = process.env.DEPLOY;
         const script = process.env.SCRIPT;
@@ -21,27 +31,23 @@ router.get('/restletapi', (req, res, next) => {
         authHeader += 'oauth_version="' + '1.0' + '",';
         authHeader += 'oauth_signature="' + oAuth.signature + '"';
 
-        console.log('Auth Header -> ', authHeader + '\n');
+        log('Auth Header -> ', authHeader + '\n');
 
         const headers = {
             Authorization: authHeader,
             'Content-Type': 'application/json'
         }
 
-        axios.get(url, { headers }).then(function (res) {
-            console.log('RESPONSE1: ' + res.data.status);
-            console.log('RESPONSE2: ' + res.data.msg);
-            console.log('RESPONSE3: ' + res.data.results);
-        }).catch(function (error) {
-            console.log(error.response.status);
-        })
+        const data = await getData(url, headers);
+        log(scs(JSON.stringify(data)));
 
         res.status(200).json({
             status: 'success',
-            data: 'worls'
+            msg: 'Connection Successful',
+            data
         });
     } catch (error) {
-        console.log(`Error --> ${error}`);
+        log(err(`Error --> ${error}`));
         res.status(400).json({
             status: 'failed',
             error
