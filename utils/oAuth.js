@@ -10,12 +10,10 @@ const chalk = require('chalk'),
 // --------------------------------- \\
 
 function calculateNonce() {
-	let text = '',
-		length = 32,
-		possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-	// ----- \\
+	let text = '';
+	const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
-	for (let i = 0; i < length; i++) {
+	for (let i = 0; i < 32; i++) {
 		text += possible.charAt(Math.floor(Math.random() * possible.length));
 	}
 	nonce = text;
@@ -41,7 +39,7 @@ function calculatesignature(consumerSecret, tokenSecret, baseString) {
 
 function buildOAuth(consumerKey, tokenId, httpAction, url) {
 	const parameters = paramfy(url);
-	log(msg('OAUTH PARAMS ---> ') + wrn(JSON.stringify(parameters)));
+	log(msg('OAUTH OBJ ------> ') + wrn(JSON.stringify(parameters)) + '\n');
 	const data = encapsulateData(parameters, consumerKey, tokenId);
 	const encodedData = encodeURIComponent(data.dataString);
 	const baseString = httpAction + '&' + encodeURIComponent(parameters.newUrl) + '&' + encodedData;
@@ -54,7 +52,7 @@ function paramfy(url) {
 	/**
 	 * ! Function to separete the Request URL parameters if any;
 	 * * Separate the deploy & script parameters;
-     * * Save the url without parameters;
+	 * * Save the url without parameters;
 	 */
 
 	let requestParams = url.split('?');
@@ -77,8 +75,8 @@ function paramfy(url) {
 		if (!el.includes('deploy') && !el.includes('script')) {
 			return el;
 		}
-    });
-    log(msg('OTHERS ---------> ') + others);
+	});
+	log(msg('OTHER PARAMS ---> ') + others + '\n');
 
 	return {
 		newUrl,
@@ -89,10 +87,10 @@ function paramfy(url) {
 }
 
 function encapsulateData(parameters, consumerKey, tokenId) {
-    /**
-     * ! Is necessary to sort() the data that will be encoded;
+	/**
+	 * ! Is necessary to sort() the data that will be encoded;
 	 * * The parameters order needs to be sorted alphabetically;
-     */
+	 */
 	const oauth_signature_method = 'HMAC-SHA256';
 	const oauth_version = '1.0';
 	const nonce = calculateNonce();
@@ -107,13 +105,13 @@ function encapsulateData(parameters, consumerKey, tokenId) {
 		'oauth_nonce=' + nonce,
 		'oauth_signature_method=' + oauth_signature_method,
 		'oauth_token=' + oauth_token
-    ];
+	];
 
 	for (let i = 0; i < parameters.others.length; i++) {
 		data.push(parameters.others[i]);
 	}
 	data.push(parameters.deploy);
-    data.push(parameters.script);
+	data.push(parameters.script);
 
 	const arrange = data.sort();
 
@@ -124,11 +122,10 @@ function encapsulateData(parameters, consumerKey, tokenId) {
 	dataString = dataString.slice(0, dataString.length - 1);
 
 	return {
-        dataString,
-        timestamp,
-        nonce
-    };
+		dataString,
+		timestamp,
+		nonce
+	};
 }
 
 module.exports = { buildOAuth };
-
