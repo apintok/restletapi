@@ -24,15 +24,23 @@ Small App that allows authentication for Restlet Scripts with [oAuth 1.0](https:
 
 ## Installation :pen:
 
-It should be a standard installation using `npm install` after downloading the code.
+1. Download the repo code
+
+2. Run npm install
+
+3. Create a config.env file
+
+It's necessary to have a config.dev which will contain the authentication data that will be used to build the oAuth Object.
+
+Note that there isn't a config.env file in this repo has it contains sensitive data. See below the structure:
 
 ---
 
 ## Current Funcionality :heavy_check_mark:
 
--> In order for oAuth to work with a different number of URL parameters, which are used to built the _Signature_. The URL parameters need to be encoded in alphabetical order;
+In order for oAuth to work with a different number of URL parameters, which are used to built the _Signature_. The URL parameters need to be encoded in alphabetical order;
 
--> Rule above applies to all parameters entered in the encoded data.
+Rule above applies to all parameters entered in the encoded data.
 
 ```javascript
 const arrange = data.sort();

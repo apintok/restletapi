@@ -46,7 +46,7 @@ router.get('/v1/restletapi', async (req, res, next) => {
 		const params = process.env.PARAMS;
 		const url = process.env.RESTLET_URL + 'script=' + script + '&deploy=' + deploy + params;
 
-		const oAuth = buildOAuth(process.env.CONSUMER_KEY, process.env.TOKEN_ID, 'GET', url);
+		const oAuth = buildOAuth(process.env.CONSUMER_KEY, process.env.TOKEN_ID, url);
 
 		let authHeader = 'OAuth realm="' + process.env.REALM + '",';
 		authHeader += 'oauth_consumer_key="' + process.env.CONSUMER_KEY + '",';

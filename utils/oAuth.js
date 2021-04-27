@@ -27,7 +27,7 @@ function calculateTimestamp() {
 	return timeStamp;
 }
 
-function calculatesignature(consumerSecret, tokenSecret, baseString) {
+function calcSignature(consumerSecret, tokenSecret, baseString) {
 	const key = consumerSecret + '&' + tokenSecret;
 	const hmacsha256Data = CryptoJS.HmacSHA256(baseString, key);
 	const base64EncodedData = hmacsha256Data.toString(CryptoJS.enc.Base64);
@@ -37,13 +37,13 @@ function calculatesignature(consumerSecret, tokenSecret, baseString) {
 	return signature;
 }
 
-function buildOAuth(consumerKey, tokenId, httpAction, url) {
+function buildOAuth(consumerKey, tokenId, url, httpAction = 'GET') {
 	const parameters = paramfy(url);
 	log(msg('OAUTH OBJ ------> ') + wrn(JSON.stringify(parameters)) + '\n');
 	const data = encapsulateData(parameters, consumerKey, tokenId);
 	const encodedData = encodeURIComponent(data.dataString);
 	const baseString = httpAction + '&' + encodeURIComponent(parameters.newUrl) + '&' + encodedData;
-	const signature = calculatesignature(process.env.CONSUMER_SECRET, process.env.TOKEN_SECRET, baseString);
+	const signature = calcSignature(process.env.CONSUMER_SECRET, process.env.TOKEN_SECRET, baseString);
 
 	return { signature, timestamp: data.timestamp, nonce: data.nonce };
 }
